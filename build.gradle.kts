@@ -2,6 +2,10 @@ plugins {
     kotlin("jvm") version PluginVersions.JVM_VERSION
 }
 
+repositories {
+    mavenCentral()
+}
+
 subprojects {
     group = "kr.hs.dgsw.vroom"
     version = "0.0.1-SNAPSHOT"
