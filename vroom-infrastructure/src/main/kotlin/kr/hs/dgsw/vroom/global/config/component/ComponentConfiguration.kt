@@ -1,4 +1,4 @@
-package kr.hs.dgsw.vroom.global.config
+package kr.hs.dgsw.vroom.global.config.component
 
 import kr.hs.dgsw.vroom.common.annotation.UseCase
 import org.springframework.context.annotation.ComponentScan

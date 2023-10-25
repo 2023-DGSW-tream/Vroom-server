@@ -1,4 +1,4 @@
-package kr.hs.dgsw.vroom.global.config
+package kr.hs.dgsw.vroom.global.config.querydsl
 
 import com.querydsl.jpa.impl.JPAQueryFactory
 import org.springframework.context.annotation.Bean
@@ -7,7 +7,7 @@ import javax.persistence.EntityManager
 import javax.persistence.PersistenceContext
 
 @Configuration
-class QueryDslConfig {
+class QueryDslConfiguration {
     @PersistenceContext
     private val entityManager: EntityManager? = null
 
