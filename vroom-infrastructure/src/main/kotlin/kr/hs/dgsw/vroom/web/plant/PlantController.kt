@@ -2,9 +2,12 @@ package kr.hs.dgsw.vroom.web.plant
 
 import kr.hs.dgsw.vroom.common.dto.FileRequest
 import kr.hs.dgsw.vroom.domain.plant.dto.request.DetectPlantRequest
+import kr.hs.dgsw.vroom.domain.plant.dto.request.SavePlantRequest
 import kr.hs.dgsw.vroom.domain.plant.dto.response.DetectPlantResponse
 import kr.hs.dgsw.vroom.domain.plant.usecase.PlantUseCase
+import org.springframework.web.bind.annotation.ModelAttribute
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -25,5 +28,12 @@ class PlantController(
                     picture.contentType!!, picture.originalFilename!!, picture.inputStream)
             )
         )
+    }
+
+    @PostMapping("/save")
+    fun savePlant(
+        @ModelAttribute request: SavePlantRequest
+    ) {
+        return plantUseCase.savePlant(request)
     }
 }
