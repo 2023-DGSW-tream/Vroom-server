@@ -11,11 +11,7 @@ class AuthDetailService(
     private val userQuerySpi: UserQuerySpi
 ): UserDetailsService {
     override fun loadUserByUsername(id: String): UserDetails {
-        val user: User? = userQuerySpi.findById(id.toLong())
-
-        if (user == null) {
-            throw RuntimeException("유저를 찾지 못함")
-        }
+        val user: User = userQuerySpi.findById(id.toLong()) ?: throw RuntimeException("유저를 찾지 못함")
 
         return AuthUser(user)
     }
