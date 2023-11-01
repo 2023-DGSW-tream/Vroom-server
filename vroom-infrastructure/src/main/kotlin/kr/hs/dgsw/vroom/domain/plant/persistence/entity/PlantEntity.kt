@@ -1,6 +1,7 @@
 package kr.hs.dgsw.vroom.domain.plant.persistence.entity
 
 import kr.hs.dgsw.vroom.domain.plant.model.value.Picture
+import kr.hs.dgsw.vroom.domain.user.persistence.entity.UserEntity
 import kr.hs.dgsw.vroom.global.converter.PictureConvert
 import javax.persistence.*
 
@@ -18,5 +19,9 @@ data class PlantEntity(
 
     @Column
     @Convert(converter = PictureConvert::class)
-    val picture: Picture
+    val picture: Picture,
+
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    val user: UserEntity?
 )

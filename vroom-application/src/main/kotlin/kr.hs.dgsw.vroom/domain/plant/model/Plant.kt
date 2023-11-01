@@ -6,6 +6,6 @@ data class Plant (
     val id: Long = 0,
     val name: String,
     val nickName: String,
-    val picture: Picture
+    val picture: Picture,
+    val userId: Long
 )
-
