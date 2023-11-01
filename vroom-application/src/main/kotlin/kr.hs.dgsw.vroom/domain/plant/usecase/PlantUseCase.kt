@@ -9,7 +9,9 @@ import kr.hs.dgsw.vroom.domain.plant.dto.response.DetectPlantResponse
 import kr.hs.dgsw.vroom.domain.plant.model.Plant
 import kr.hs.dgsw.vroom.domain.plant.model.value.Picture
 import kr.hs.dgsw.vroom.domain.plant.spi.query.PlantCommandSpi
+import kr.hs.dgsw.vroom.domain.plant.spi.query.PlantQuerySpi
 import kr.hs.dgsw.vroom.domain.plant.spi.service.DetectPlantService
+import kr.hs.dgsw.vroom.domain.user.spi.query.UserQuerySpi
 import java.io.File
 import java.util.*
 
@@ -17,17 +19,28 @@ import java.util.*
 class PlantUseCase(
     private val detectPlantService: DetectPlantService,
     private val plantCommandSpi: PlantCommandSpi,
-    private val fileTransfer: FileTransfer
+    private val plantQuerySpi : PlantQuerySpi,
+    private val fileTransfer: FileTransfer,
+    private val userQuerySpi: UserQuerySpi
 ) {
     fun detect(request: DetectPlantRequest): DetectPlantResponse {
         return detectPlantService.detection(request)
     }
 
-    fun savePlant(request: SavePlantRequest) {
+    fun savePlant(request: SavePlantRequest, id: Long) {
+        val user = userQuerySpi.findById(id) ?: throw RuntimeException()
+
         val fileName: String = saveFile("picture\\", request.picture)
         plantCommandSpi.save(
-            Plant(name = request.name, nickName = request.nickName, picture = Picture.of(fileName))
+            Plant(name = request.name, nickName = request.nickName, picture = Picture.of(fileName), userId = user.id)
         )
+    }
+
+    fun deletePlant(plantId: Long, userId: Long) {
+        if (!plantQuerySpi.existsById(plantId)) {
+            throw NoSuchElementException()
+        }
+        plantCommandSpi.deleteById(plantId)
     }
 
     private fun saveFile(path: String, fileRequest: FileRequest): String {

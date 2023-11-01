@@ -10,7 +10,11 @@ class PlantCommandRepository(
     private val plantRepository: PlantRepository,
     private val plantMapper: PlantMapper
 ): PlantCommandSpi{
-    override fun save(plant: Plant): Plant {
-        return plantMapper.entityToDomain(plantRepository.save(plantMapper.domainToEntity(plant)))!!
+    override fun save(plant: Plant) {
+        plantRepository.save(plantMapper.domainToEntity(plant))
+    }
+
+    override fun deleteById(id: Long) {
+        plantRepository.deleteById(id)
     }
 }

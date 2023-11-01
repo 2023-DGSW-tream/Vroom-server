@@ -13,6 +13,14 @@ class PlantQueryRepository(
     private val plantMapper: PlantMapper,
     private val queryFactory: JPAQueryFactory
 ): PlantQuerySpi{
+    override fun existsById(id: Long): Boolean {
+        val plantEntity: QPlantEntity = QPlantEntity.plantEntity
+        return queryFactory.from(plantEntity)
+            .where(plantEntity.id.eq(id))
+            .select(plantEntity.id)
+            .fetchFirst() != null
+    }
+
     override fun findById(id: Long): Plant? {
         val plantEntity: QPlantEntity = QPlantEntity.plantEntity
         val entity: PlantEntity? = queryFactory.selectFrom(plantEntity)
