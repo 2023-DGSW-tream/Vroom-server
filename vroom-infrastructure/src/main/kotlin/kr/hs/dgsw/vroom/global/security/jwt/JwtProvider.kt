@@ -3,6 +3,7 @@ package kr.hs.dgsw.vroom.global.security.jwt
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import kr.hs.dgsw.vroom.domain.user.facade.UserFacade
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.security.Key
@@ -13,7 +14,9 @@ import javax.annotation.PostConstruct
 
 
 @Component
-class JwtProvider {
+class JwtProvider(
+    private val userFacade: UserFacade
+) {
     @Value("\${vroom.jwt.accessKey}")
     private val secretKey: String? = null
     private var key: Key? = null
@@ -28,19 +31,29 @@ class JwtProvider {
         return Jwts.builder()
             .setSubject(id.toString())
             .setIssuedAt(Date.from(now))
-            .setExpiration(Date.from(now.plus(Duration.ofSeconds(30))))
+            .setExpiration(Date.from(now.plus(Duration.ofDays(7))))
             .signWith(key)
             .compact()
     }
 
-    private fun extractAllClaims(token: String): Claims? {
+    fun extractEmailClaims(token: String): String {
+        return userFacade.getUserById(extractAllClaims(token).toLong()).email
+    }
+
+    fun extractIdClaims(token: String): Long {
+        return userFacade.getUserById(extractAllClaims(token).toLong()).id
+    }
+
+    private fun extractAllClaims(token: String): String {
         return try {
             Jwts.parserBuilder()
-                .setSigningKey(secretKey)
+                .setSigningKey(key)
                 .build()
                 .parseClaimsJws(token)
                 .body
+                .subject
         } catch (e: Exception) {
+            e.printStackTrace()
             TODO()
         }
     }
